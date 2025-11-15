@@ -215,6 +215,17 @@ button.ghost {
   align-items: stretch;
 }
 
+.tasks-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.tasks-layout > * {
+  min-width: 0;
+}
+
 .points-pill {
   padding: 0.5rem 1rem;
   border-radius: 999px;
@@ -230,6 +241,10 @@ button.ghost {
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 0.75rem;
   margin: 1rem 0 1.5rem;
+}
+
+.tasks-layout .filters {
+  margin: 0;
 }
 
 .filters input,
@@ -406,9 +421,8 @@ button.delete {
     grid-template-columns: 1fr;
   }
 
-  .filters,
-  .task-list {
-    grid-column: 1;
+  .tasks-layout {
+    grid-template-columns: 1fr;
   }
 }
 
