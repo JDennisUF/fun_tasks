@@ -241,17 +241,23 @@ button.ghost {
   background: #f8fafc;
 }
 
-.task-list {
+.task-grid {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.task-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
 @media (max-width: 900px) {
-  .task-list {
+  .task-row {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 }
@@ -264,6 +270,7 @@ button.ghost {
   gap: 0.5rem;
   background: #fff;
   position: relative;
+  height: 100%;
 }
 
 .task-card.completed {
