@@ -200,11 +200,32 @@ button.ghost {
   transition: width 0.3s ease;
 }
 
+
 .panel-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+}
+
+.tasks-panel {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.tasks-panel .panel-heading {
+  grid-column: 1 / -1;
+}
+
+.tasks-panel .filters {
+  grid-column: 1;
+  margin-top: 0;
+}
+
+.tasks-panel .task-list {
+  grid-column: 2;
 }
 
 .points-pill {
@@ -237,8 +258,8 @@ button.ghost {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1rem;
 }
 
@@ -378,6 +399,17 @@ button.delete {
   padding: 2rem clamp(1rem, 4vw, 4rem);
   text-align: center;
   color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+  .tasks-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .filters,
+  .task-list {
+    grid-column: 1;
+  }
 }
 
 @media (max-width: 700px) {
