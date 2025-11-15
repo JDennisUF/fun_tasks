@@ -319,7 +319,7 @@ function applyFilters() {
       case 'created-asc':
         return new Date(a.createdAt) - new Date(b.createdAt);
       case 'due-asc':
-        return (a.dueDate || '9999-12-31').localeCompare(b.dueDate || '9999-12-31');
+        return getDueDateSortValue(a) - getDueDateSortValue(b) || new Date(a.createdAt) - new Date(b.createdAt);
       case 'priority-desc':
         return priorityOrder.indexOf(b.priority) - priorityOrder.indexOf(a.priority);
       case 'title-asc':
@@ -330,6 +330,12 @@ function applyFilters() {
   });
 
   return tasks;
+}
+
+function getDueDateSortValue(task) {
+  if (!task.dueDate) return Number.POSITIVE_INFINITY;
+  const time = new Date(task.dueDate).getTime();
+  return Number.isNaN(time) ? Number.POSITIVE_INFINITY : time;
 }
 
 function awardPoints(task) {
