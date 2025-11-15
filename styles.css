@@ -209,23 +209,10 @@ button.ghost {
 }
 
 .tasks-panel {
-  display: grid;
-  grid-template-columns: minmax(220px, 280px) 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
-  align-items: start;
-}
-
-.tasks-panel .panel-heading {
-  grid-column: 1 / -1;
-}
-
-.tasks-panel .filters {
-  grid-column: 1;
-  margin-top: 0;
-}
-
-.tasks-panel .task-list {
-  grid-column: 2;
+  align-items: stretch;
 }
 
 .points-pill {
@@ -259,8 +246,14 @@ button.ghost {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .task-list {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
 }
 
 .task-card {
