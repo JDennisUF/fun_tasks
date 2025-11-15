@@ -85,31 +85,33 @@
           </div>
         </div>
 
-        <div class="filters">
-          <select id="statusFilter">
-            <option value="all">All</option>
-            <option value="active">Active</option>
-            <option value="completed">Completed</option>
-          </select>
-          <select id="priorityFilter">
-            <option value="all">Any priority</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-            <option value="urgent">Urgent</option>
-          </select>
-          <input type="text" id="categoryFilter" placeholder="Category" />
-          <input type="search" id="searchInput" placeholder="Search tasks" />
-          <select id="sortSelect">
-            <option value="due-asc" selected>Due soon</option>
-            <option value="created-desc">Newest</option>
-            <option value="created-asc">Oldest</option>
-            <option value="priority-desc">Priority (high first)</option>
-            <option value="title-asc">Title A-Z</option>
-          </select>
-        </div>
+        <div class="tasks-layout">
+          <div class="filters">
+            <select id="statusFilter">
+              <option value="all">All</option>
+              <option value="active">Active</option>
+              <option value="completed">Completed</option>
+            </select>
+            <select id="priorityFilter">
+              <option value="all">Any priority</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="urgent">Urgent</option>
+            </select>
+            <input type="text" id="categoryFilter" placeholder="Category" />
+            <input type="search" id="searchInput" placeholder="Search tasks" />
+            <select id="sortSelect">
+              <option value="due-asc" selected>Due soon</option>
+              <option value="created-desc">Newest</option>
+              <option value="created-asc">Oldest</option>
+              <option value="priority-desc">Priority (high first)</option>
+              <option value="title-asc">Title A-Z</option>
+            </select>
+          </div>
 
-        <div id="taskGrid" class="task-grid" role="list" aria-live="polite"></div>
+          <div id="taskGrid" class="task-grid" role="list" aria-live="polite"></div>
+        </div>
       </section>
 
       <section class="panel achievements-panel">
