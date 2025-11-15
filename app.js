@@ -120,7 +120,7 @@ const elements = {
   category: document.getElementById('category'),
   taskId: document.getElementById('taskId'),
   motivation: document.getElementById('motivation'),
-  taskList: document.getElementById('taskList'),
+  taskGrid: document.getElementById('taskGrid'),
   achievementList: document.getElementById('achievementList'),
   pointsValue: document.getElementById('pointsValue'),
   streakValue: document.getElementById('streakValue'),
@@ -244,46 +244,61 @@ function resetForm() {
 
 function renderTasks() {
   const tasks = applyFilters();
-  elements.taskList.innerHTML = '';
+  elements.taskGrid.innerHTML = '';
 
   if (!tasks.length) {
-    const empty = document.createElement('li');
+    const row = document.createElement('div');
+    row.className = 'task-row';
+    const empty = document.createElement('article');
     empty.className = 'task-card';
+    empty.setAttribute('role', 'listitem');
     empty.innerHTML = '<p>No tasks match your filters yet. Add something fun! ✨</p>';
-    elements.taskList.appendChild(empty);
+    row.appendChild(empty);
+    elements.taskGrid.appendChild(row);
     return;
   }
 
-  tasks.forEach((task) => {
-    const li = document.createElement('li');
-    li.className = `task-card ${task.completed ? 'completed' : ''}`;
-    const dueText = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date';
-    const createdText = new Date(task.createdAt).toLocaleDateString();
+  for (let index = 0; index < tasks.length; index += 3) {
+    const row = document.createElement('div');
+    row.className = 'task-row';
+    tasks.slice(index, index + 3).forEach((task) => {
+      row.appendChild(createTaskCard(task));
+    });
+    elements.taskGrid.appendChild(row);
+  }
+}
 
-    li.innerHTML = `
-      <header>
-        <h3>${task.title}</h3>
-        <span class="priority-pill priority-${task.priority}">${task.priority}</span>
-      </header>
-      <p>${task.description || ''}</p>
-      <div class="task-meta">
-        <span>Created ${createdText}</span>
-        <span>Due ${dueText}</span>
-        ${task.category ? `<span>#${task.category}</span>` : ''}
-      </div>
-      <div class="task-actions">
-        <button class="complete" data-action="toggle">${task.completed ? 'Mark active' : 'Mark complete'}</button>
-        <button class="edit" data-action="edit">Edit</button>
-        <button class="delete" data-action="delete">Delete</button>
-      </div>
-    `;
+function createTaskCard(task) {
+  const card = document.createElement('article');
+  card.className = `task-card ${task.completed ? 'completed' : ''}`;
+  card.setAttribute('role', 'listitem');
+  const dueText = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date';
+  const createdText = new Date(task.createdAt).toLocaleDateString();
+  const descriptionBlock = task.description ? `<p>${task.description}</p>` : '';
 
-    li.querySelector('[data-action="toggle"]').addEventListener('click', () => toggleTask(task.id));
-    li.querySelector('[data-action="edit"]').addEventListener('click', () => editTask(task.id));
-    li.querySelector('[data-action="delete"]').addEventListener('click', () => deleteTask(task.id));
+  card.innerHTML = `
+    <header>
+      <h3>${task.title}</h3>
+      <span class="priority-pill priority-${task.priority}">${task.priority}</span>
+    </header>
+    ${descriptionBlock}
+    <div class="task-meta">
+      <span>Created ${createdText}</span>
+      <span>Due ${dueText}</span>
+      ${task.category ? `<span>#${task.category}</span>` : ''}
+    </div>
+    <div class="task-actions">
+      <button class="complete" data-action="toggle">${task.completed ? 'Mark active' : 'Mark complete'}</button>
+      <button class="edit" data-action="edit">Edit</button>
+      <button class="delete" data-action="delete">Delete</button>
+    </div>
+  `;
 
-    elements.taskList.appendChild(li);
-  });
+  card.querySelector('[data-action="toggle"]').addEventListener('click', () => toggleTask(task.id));
+  card.querySelector('[data-action="edit"]').addEventListener('click', () => editTask(task.id));
+  card.querySelector('[data-action="delete"]').addEventListener('click', () => deleteTask(task.id));
+
+  return card;
 }
 
 function applyFilters() {
