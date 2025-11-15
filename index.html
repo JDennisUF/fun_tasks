@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fun Tasks</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Gamified productivity playground</p>
+        <h1>Fun Tasks</h1>
+        <p class="subtitle">Turn your to-do list into a celebration with rewards, streaks, and delightful feedback.</p>
+      </div>
+      <div class="stats-card" id="streakCard">
+        <p class="label">Current Streak</p>
+        <p class="value" id="streakValue">0 days</p>
+        <p class="muted" id="bestStreak">Best streak: 0 days</p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel form-panel">
+        <h2>Create a task</h2>
+        <form id="taskForm">
+          <input type="hidden" id="taskId" />
+          <label>
+            Title
+            <input type="text" id="title" placeholder="e.g. Write project update" required />
+          </label>
+          <label>
+            Description
+            <textarea id="description" rows="3" placeholder="Add a few motivating details"></textarea>
+          </label>
+          <div class="form-grid">
+            <label>
+              Priority
+              <select id="priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </label>
+            <label>
+              Due date
+              <input type="date" id="dueDate" />
+            </label>
+            <label>
+              Category
+              <input type="text" id="category" placeholder="Wellness, work, study..." />
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="primary">Save task</button>
+            <button type="button" id="resetBtn" class="ghost">Reset</button>
+          </div>
+        </form>
+
+        <div class="message-card" id="motivation"></div>
+        <div class="progress-card">
+          <div class="progress-heading">
+            <div>
+              <p class="label">Daily progress</p>
+              <p class="muted">Goal: <span id="dailyGoal">5</span> tasks</p>
+            </div>
+            <p class="value" id="dailyProgress">0</p>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" id="progressFill"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel tasks-panel">
+        <div class="panel-heading">
+          <h2>Your quests</h2>
+          <div class="points-pill">
+            <span>Points</span>
+            <strong id="pointsValue">0</strong>
+          </div>
+        </div>
+
+        <div class="filters">
+          <select id="statusFilter">
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+          </select>
+          <select id="priorityFilter">
+            <option value="all">Any priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+          <input type="text" id="categoryFilter" placeholder="Category" />
+          <input type="search" id="searchInput" placeholder="Search tasks" />
+          <select id="sortSelect">
+            <option value="created-desc">Newest</option>
+            <option value="created-asc">Oldest</option>
+            <option value="due-asc">Due soon</option>
+            <option value="priority-desc">Priority (high first)</option>
+            <option value="title-asc">Title A-Z</option>
+          </select>
+        </div>
+
+        <ul id="taskList" class="task-list" aria-live="polite"></ul>
+      </section>
+
+      <section class="panel achievements-panel">
+        <h2>Achievements</h2>
+        <ul id="achievementList" class="achievement-list"></ul>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>Fun Tasks keeps everything in your browser using local storage. Your data stays on this device.</p>
+    </footer>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
