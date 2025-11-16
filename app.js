@@ -239,9 +239,11 @@ function toggleTask(id) {
     task.completedAt = new Date().toISOString();
     awardPoints(task);
   } else {
+    decrementDailyProgressForTask(task);
     // Reversing a completion removes stats impact for simplicity
     state.stats.totalCompleted = Math.max(0, state.stats.totalCompleted - 1);
     state.stats.points = Math.max(0, state.stats.points - priorityPoints[task.priority]);
+    task.completedAt = null;
   }
   saveState();
   renderTasks();
@@ -675,6 +677,15 @@ function handleDailyProgress() {
     state.stats.goalRewardedToday = false;
   }
   state.stats.dailyProgress += 1;
+}
+
+function decrementDailyProgressForTask(task) {
+  if (!task?.completedAt || !state.stats.dailyProgressDate) return;
+  const completionDate = new Date(task.completedAt);
+  if (Number.isNaN(completionDate.getTime())) return;
+  const completionDateKey = completionDate.toDateString();
+  if (completionDateKey !== state.stats.dailyProgressDate) return;
+  state.stats.dailyProgress = Math.max(0, state.stats.dailyProgress - 1);
 }
 
 function syncDailyProgress() {
