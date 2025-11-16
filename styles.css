@@ -405,9 +405,9 @@ button.ghost {
 
 .task-actions {
   display: flex;
-  gap: 0.4rem;
-  justify-content: flex-end;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-end;
 }
 
 .task-actions button {
@@ -500,7 +500,7 @@ body.modal-open {
   }
 
   .task-actions {
-    justify-content: flex-start;
+    align-items: flex-start;
   }
 }
 
