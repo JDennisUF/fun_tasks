@@ -330,7 +330,7 @@ button.ghost {
 
 .task-row {
   display: grid;
-  grid-template-columns: minmax(220px, 3fr) minmax(180px, 2fr) minmax(120px, 1fr) auto;
+  grid-template-columns: minmax(220px, 3fr) minmax(180px, 2fr) minmax(200px, auto);
   gap: 0.75rem;
   align-items: center;
   padding: 0.65rem 0.9rem;
@@ -372,9 +372,22 @@ button.ghost {
   gap: 0.5rem;
 }
 
+.task-title-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
 .task-main h3 {
   margin: 0;
   font-size: 1.1rem;
+}
+
+.task-category-inline {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.95rem;
 }
 
 .task-description {
@@ -389,15 +402,6 @@ button.ghost {
   font-size: 0.95rem;
 }
 
-.task-category {
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-}
-
-.task-category span {
-  color: var(--text-muted);
-}
 
 .task-actions {
   display: flex;
