@@ -10,7 +10,7 @@ const motivationalMessages = {
   ],
   creation: [
     "Great idea! Let's make it happen.",
-    "New quests unlocked – time to earn rewards!",
+    "New tasks unlocked – time to earn rewards!",
     "Planning is the first superpower."
   ],
   completion: [
@@ -113,12 +113,18 @@ let editingTaskId = null;
 const elements = {
   form: document.getElementById('taskForm'),
   resetBtn: document.getElementById('resetBtn'),
+  submitBtn: document.getElementById('submitTaskBtn'),
   title: document.getElementById('title'),
   description: document.getElementById('description'),
   priority: document.getElementById('priority'),
   dueDate: document.getElementById('dueDate'),
   category: document.getElementById('category'),
   taskId: document.getElementById('taskId'),
+  modal: document.getElementById('taskModal'),
+  modalBackdrop: document.getElementById('taskModalBackdrop'),
+  openModalBtn: document.getElementById('openTaskModal'),
+  closeModalBtn: document.getElementById('closeTaskModal'),
+  modalTitle: document.getElementById('taskModalTitle'),
   motivation: document.getElementById('motivation'),
   taskGrid: document.getElementById('taskGrid'),
   achievementList: document.getElementById('achievementList'),
@@ -149,11 +155,24 @@ function initialize() {
 function bindEvents() {
   elements.form.addEventListener('submit', handleSubmit);
   elements.resetBtn.addEventListener('click', resetForm);
+  elements.openModalBtn.addEventListener('click', () => {
+    resetForm();
+    openTaskModal();
+  });
+  elements.closeModalBtn.addEventListener('click', closeTaskModal);
+  elements.modalBackdrop.addEventListener('click', closeTaskModal);
+  document.addEventListener('keydown', handleGlobalKeydown);
   elements.statusFilter.addEventListener('change', renderTasks);
   elements.priorityFilter.addEventListener('change', renderTasks);
   elements.categoryFilter.addEventListener('input', renderTasks);
   elements.searchInput.addEventListener('input', renderTasks);
   elements.sortSelect.addEventListener('change', renderTasks);
+}
+
+function handleGlobalKeydown(event) {
+  if (event.key === 'Escape' && isModalOpen()) {
+    closeTaskModal();
+  }
 }
 
 function handleSubmit(event) {
@@ -176,9 +195,9 @@ function handleSubmit(event) {
     addTask(payload);
   }
 
-  resetForm();
   renderTasks();
   saveState();
+  closeTaskModal();
 }
 
 function addTask(task) {
@@ -233,13 +252,40 @@ function editTask(id) {
   elements.priority.value = task.priority;
   elements.dueDate.value = task.dueDate || '';
   elements.category.value = task.category || '';
-  elements.title.focus();
+  elements.modalTitle.textContent = 'Edit task';
+  if (elements.submitBtn) elements.submitBtn.textContent = 'Update task';
+  openTaskModal();
 }
 
 function resetForm() {
   editingTaskId = null;
   elements.form.reset();
   elements.priority.value = 'low';
+  elements.taskId.value = '';
+  elements.modalTitle.textContent = 'Create a task';
+  if (elements.submitBtn) elements.submitBtn.textContent = 'Save task';
+}
+
+function openTaskModal() {
+  if (!elements.modal) return;
+  elements.modal.classList.add('is-visible');
+  elements.modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+  requestAnimationFrame(() => {
+    elements.title.focus();
+  });
+}
+
+function closeTaskModal() {
+  if (!elements.modal) return;
+  elements.modal.classList.remove('is-visible');
+  elements.modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  resetForm();
+}
+
+function isModalOpen() {
+  return elements.modal?.classList.contains('is-visible');
 }
 
 function renderTasks() {
