@@ -436,6 +436,7 @@ function renderCalendar() {
   const monthStart = new Date(calendarReferenceDate.getFullYear(), calendarReferenceDate.getMonth(), 1);
   const monthEnd = new Date(calendarReferenceDate.getFullYear(), calendarReferenceDate.getMonth() + 1, 0);
   const countsByDate = getTaskCountsByDate();
+  const today = new Date();
 
   elements.calendarGrid.innerHTML = '';
   if (elements.calendarMonthLabel) {
@@ -465,7 +466,8 @@ function renderCalendar() {
     const dayCell = createCalendarDay({
       date: currentDate,
       key,
-      counts: countsByDate[key]
+      counts: countsByDate[key],
+      isToday: currentDate.toDateString() === today.toDateString()
     });
     elements.calendarGrid.appendChild(dayCell);
   }
@@ -482,9 +484,12 @@ function renderCalendar() {
   }
 }
 
-function createCalendarDay({ date, key, counts }) {
+function createCalendarDay({ date, key, counts, isToday = false }) {
   const dayEl = document.createElement('div');
   dayEl.className = 'calendar-day';
+  if (isToday) {
+    dayEl.classList.add('is-today');
+  }
   dayEl.tabIndex = 0;
   dayEl.setAttribute('role', 'button');
   const friendlyLabel = date.toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
