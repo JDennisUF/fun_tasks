@@ -508,18 +508,15 @@ function createCalendarDay({ date, key, counts }) {
     pill.setAttribute('aria-label', `${count} ${label} task${count === 1 ? '' : 's'}`);
     pills.appendChild(pill);
   });
-  if (!pills.children.length) {
-    const emptyText = document.createElement('span');
-    emptyText.className = 'muted';
-    emptyText.textContent = 'No tasks';
-    pills.appendChild(emptyText);
+  if (pills.children.length) {
+    dayEl.appendChild(pills);
   }
-  dayEl.appendChild(pills);
 
   const addButton = document.createElement('button');
   addButton.type = 'button';
   addButton.className = 'calendar-add';
-  addButton.textContent = '+ Task';
+  addButton.textContent = '+';
+  addButton.setAttribute('aria-label', `Add task for ${friendlyLabel}`);
   addButton.addEventListener('click', (event) => {
     event.stopPropagation();
     startTaskFromCalendar(key);
