@@ -330,7 +330,6 @@ function createTaskHeader() {
   header.innerHTML = `
     <span>Task</span>
     <span>Timeline</span>
-    <span>Category</span>
     <span>Actions</span>
   `;
   return header;
@@ -349,7 +348,10 @@ function createTaskRow(task) {
   card.innerHTML = `
     <div class="task-main">
       <div class="task-title-line">
-        <h3>${task.title}</h3>
+        <div class="task-title-content">
+          <h3>${task.title}</h3>
+          <p class="task-category-inline">${categoryBlock}</p>
+        </div>
         <span class="priority-pill priority-${task.priority}">${task.priority}</span>
       </div>
       ${descriptionBlock}
@@ -361,7 +363,6 @@ function createTaskRow(task) {
       <strong>${timelineLabel}</strong>
       ${task.dueDate ? `<span class="muted">${dueText}</span>` : '<span class="muted">Set a due date</span>'}
     </div>
-    <div class="task-category">${categoryBlock}</div>
     <div class="task-actions">
       <button class="complete" data-action="toggle">${task.completed ? 'Mark active' : 'Mark complete'}</button>
       <button class="edit" data-action="edit">Edit</button>
