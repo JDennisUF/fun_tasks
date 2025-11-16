@@ -114,6 +114,8 @@ const defaultState = {
 
 let state = loadState();
 let editingTaskId = null;
+let calendarReferenceDate = new Date();
+const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const elements = {
   form: document.getElementById('taskForm'),
@@ -143,7 +145,11 @@ const elements = {
   priorityFilter: document.getElementById('priorityFilter'),
   categoryFilter: document.getElementById('categoryFilter'),
   searchInput: document.getElementById('searchInput'),
-  sortSelect: document.getElementById('sortSelect')
+  sortSelect: document.getElementById('sortSelect'),
+  calendarGrid: document.getElementById('taskCalendar'),
+  calendarMonthLabel: document.getElementById('calendarMonthLabel'),
+  calendarPrevBtn: document.getElementById('calendarPrev'),
+  calendarNextBtn: document.getElementById('calendarNext')
 };
 
 initialize();
@@ -172,6 +178,8 @@ function bindEvents() {
   elements.categoryFilter.addEventListener('input', renderTasks);
   elements.searchInput.addEventListener('input', renderTasks);
   elements.sortSelect.addEventListener('change', renderTasks);
+  elements.calendarPrevBtn?.addEventListener('click', () => changeCalendarMonth(-1));
+  elements.calendarNextBtn?.addEventListener('click', () => changeCalendarMonth(1));
 }
 
 function handleGlobalKeydown(event) {
@@ -297,6 +305,9 @@ function renderTasks() {
   const tasks = applyFilters();
   elements.taskGrid.innerHTML = '';
 
+  // Always refresh the calendar so day cells render even when no tasks exist
+  renderCalendar();
+
   if (!tasks.length) {
     const empty = document.createElement('div');
     empty.className = 'task-row';
@@ -409,6 +420,149 @@ function applyFilters() {
   });
 
   return tasks;
+}
+
+function changeCalendarMonth(delta) {
+  calendarReferenceDate = new Date(
+    calendarReferenceDate.getFullYear(),
+    calendarReferenceDate.getMonth() + delta,
+    1
+  );
+  renderCalendar();
+}
+
+function renderCalendar() {
+  if (!elements.calendarGrid) return;
+  const monthStart = new Date(calendarReferenceDate.getFullYear(), calendarReferenceDate.getMonth(), 1);
+  const monthEnd = new Date(calendarReferenceDate.getFullYear(), calendarReferenceDate.getMonth() + 1, 0);
+  const countsByDate = getTaskCountsByDate();
+
+  elements.calendarGrid.innerHTML = '';
+  if (elements.calendarMonthLabel) {
+    elements.calendarMonthLabel.textContent = monthStart.toLocaleString(undefined, {
+      month: 'long',
+      year: 'numeric'
+    });
+  }
+
+  weekdayLabels.forEach((weekday) => {
+    const labelCell = document.createElement('div');
+    labelCell.className = 'calendar-weekday';
+    labelCell.textContent = weekday;
+    elements.calendarGrid.appendChild(labelCell);
+  });
+
+  const leadingEmpty = monthStart.getDay();
+  for (let i = 0; i < leadingEmpty; i += 1) {
+    const empty = document.createElement('div');
+    empty.className = 'calendar-day is-empty';
+    elements.calendarGrid.appendChild(empty);
+  }
+
+  for (let day = 1; day <= monthEnd.getDate(); day += 1) {
+    const currentDate = new Date(monthStart.getFullYear(), monthStart.getMonth(), day);
+    const key = formatDateKey(currentDate);
+    const dayCell = createCalendarDay({
+      date: currentDate,
+      key,
+      counts: countsByDate[key]
+    });
+    elements.calendarGrid.appendChild(dayCell);
+  }
+
+  const dayCells = leadingEmpty + monthEnd.getDate();
+  const remainder = dayCells % 7;
+  if (remainder !== 0) {
+    const trailing = 7 - remainder;
+    for (let i = 0; i < trailing; i += 1) {
+      const empty = document.createElement('div');
+      empty.className = 'calendar-day is-empty';
+      elements.calendarGrid.appendChild(empty);
+    }
+  }
+}
+
+function createCalendarDay({ date, key, counts }) {
+  const dayEl = document.createElement('div');
+  dayEl.className = 'calendar-day';
+  dayEl.tabIndex = 0;
+  dayEl.setAttribute('role', 'button');
+  const friendlyLabel = date.toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
+  dayEl.setAttribute('aria-label', `Tasks for ${friendlyLabel}`);
+
+  const dateLabel = document.createElement('div');
+  dateLabel.className = 'calendar-date';
+  dateLabel.textContent = date.getDate();
+  dayEl.appendChild(dateLabel);
+
+  const pills = document.createElement('div');
+  pills.className = 'calendar-pills';
+  const priorityOrder = ['urgent', 'high', 'medium', 'low'];
+  priorityOrder.forEach((priority) => {
+    const count = counts?.[priority] || 0;
+    if (!count) return;
+    const pill = document.createElement('span');
+    pill.className = `priority-pill calendar-pill priority-${priority}`;
+    const label = priority === 'urgent' ? 'Urgent' : priority.charAt(0).toUpperCase() + priority.slice(1);
+    pill.textContent = count;
+    pill.setAttribute('aria-label', `${count} ${label} task${count === 1 ? '' : 's'}`);
+    pills.appendChild(pill);
+  });
+  if (!pills.children.length) {
+    const emptyText = document.createElement('span');
+    emptyText.className = 'muted';
+    emptyText.textContent = 'No tasks';
+    pills.appendChild(emptyText);
+  }
+  dayEl.appendChild(pills);
+
+  const addButton = document.createElement('button');
+  addButton.type = 'button';
+  addButton.className = 'calendar-add';
+  addButton.textContent = '+ Task';
+  addButton.addEventListener('click', (event) => {
+    event.stopPropagation();
+    startTaskFromCalendar(key);
+  });
+  dayEl.appendChild(addButton);
+
+  dayEl.addEventListener('click', (event) => {
+    if (event.target.closest('button')) return;
+    startTaskFromCalendar(key);
+  });
+
+  dayEl.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      startTaskFromCalendar(key);
+    }
+  });
+
+  return dayEl;
+}
+
+function startTaskFromCalendar(dateKey) {
+  resetForm();
+  elements.dueDate.value = dateKey;
+  openTaskModal();
+}
+
+function getTaskCountsByDate() {
+  return state.tasks.reduce((acc, task) => {
+    if (!task.dueDate) return acc;
+    if (!acc[task.dueDate]) {
+      acc[task.dueDate] = { low: 0, medium: 0, high: 0, urgent: 0 };
+    }
+    acc[task.dueDate][task.priority] += 1;
+    return acc;
+  }, {});
+}
+
+function formatDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function getDueDateSortValue(task) {

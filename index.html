@@ -86,6 +86,21 @@
         <div id="taskGrid" class="task-grid" role="list" aria-live="polite"></div>
       </section>
 
+      <section class="panel calendar-panel" aria-label="Task calendar">
+        <div class="panel-heading calendar-heading">
+          <div>
+            <p class="label">Plan visually</p>
+            <h2>Calendar</h2>
+          </div>
+          <div class="calendar-controls" aria-live="polite">
+            <button type="button" class="calendar-nav" id="calendarPrev" aria-label="Previous month">‹</button>
+            <strong id="calendarMonthLabel" class="calendar-month-label"></strong>
+            <button type="button" class="calendar-nav" id="calendarNext" aria-label="Next month">›</button>
+          </div>
+        </div>
+        <div class="calendar-grid" id="taskCalendar" aria-live="polite"></div>
+      </section>
+
       <section class="panel achievements-panel">
         <h2>Achievements</h2>
         <ul id="achievementList" class="achievement-list"></ul>
