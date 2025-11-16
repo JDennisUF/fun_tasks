@@ -331,7 +331,7 @@ function createTaskHeader() {
   header.setAttribute('aria-hidden', 'true');
   header.innerHTML = `
     <span>Task</span>
-    <span>Timeline</span>
+    <span>Due Date</span>
     <span>Actions</span>
   `;
   return header;
@@ -345,7 +345,7 @@ function createTaskRow(task) {
   const createdText = new Date(task.createdAt).toLocaleDateString();
   const descriptionBlock = task.description ? `<p class="task-description">${task.description}</p>` : '';
   const categoryBlock = task.category ? `#${task.category}` : '<span class="muted">Uncategorized</span>';
-  const timelineLabel = task.dueDate ? `Due ${dueText}` : 'No due date';
+  const timelineLabel = task.dueDate ? dueText : 'No due date';
 
   card.innerHTML = `
     <div class="task-main">
@@ -363,7 +363,7 @@ function createTaskRow(task) {
     </div>
     <div class="task-timeline">
       <strong>${timelineLabel}</strong>
-      ${task.dueDate ? `<span class="muted">${dueText}</span>` : '<span class="muted">Set a due date</span>'}
+      ${task.dueDate ? '' : '<span class="muted">Set a due date</span>'}
     </div>
     <div class="task-actions">
       <button class="complete" data-action="toggle">${task.completed ? 'Mark active' : 'Mark complete'}</button>
