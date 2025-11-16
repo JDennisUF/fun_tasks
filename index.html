@@ -23,9 +23,82 @@
       </div>
     </header>
 
+    <section class="top-banner">
+      <div class="banner-inner">
+        <div class="banner-message">
+          <p class="label">Daily inspiration</p>
+          <div class="message-card" id="motivation"></div>
+        </div>
+        <div class="banner-progress">
+          <div class="progress-heading">
+            <div>
+              <p class="label">Daily progress</p>
+              <p class="muted">Goal: <span id="dailyGoal">5</span> tasks</p>
+            </div>
+            <p class="value" id="dailyProgress">0</p>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" id="progressFill"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <main class="layout">
-      <section class="panel form-panel">
-        <h2>Create a task</h2>
+      <section class="panel tasks-panel">
+        <div class="panel-heading">
+          <h2>Your tasks</h2>
+          <div class="panel-actions">
+            <div class="points-pill">
+              <span>Points</span>
+              <strong id="pointsValue">0</strong>
+            </div>
+            <button type="button" class="primary" id="openTaskModal" aria-haspopup="dialog" aria-controls="taskModal">
+              + New task
+            </button>
+          </div>
+        </div>
+
+        <div class="filters">
+          <select id="statusFilter">
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+          </select>
+          <select id="priorityFilter">
+            <option value="all">Any priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="urgent">Urgent</option>
+          </select>
+          <input type="text" id="categoryFilter" placeholder="Category" />
+          <input type="search" id="searchInput" placeholder="Search tasks" />
+          <select id="sortSelect">
+            <option value="due-asc" selected>Due soon</option>
+            <option value="created-desc">Newest</option>
+            <option value="created-asc">Oldest</option>
+            <option value="priority-desc">Priority (high first)</option>
+            <option value="title-asc">Title A-Z</option>
+          </select>
+        </div>
+
+        <div id="taskGrid" class="task-grid" role="list" aria-live="polite"></div>
+      </section>
+
+      <section class="panel achievements-panel">
+        <h2>Achievements</h2>
+        <ul id="achievementList" class="achievement-list"></ul>
+      </section>
+    </main>
+
+    <div class="modal" id="taskModal" aria-hidden="true">
+      <div class="modal-overlay" id="taskModalBackdrop" aria-hidden="true"></div>
+      <div class="modal-card panel form-panel" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
+        <div class="modal-header">
+          <h2 id="taskModalTitle">Create a task</h2>
+          <button class="icon-button" id="closeTaskModal" aria-label="Close create task form">×</button>
+        </div>
         <form id="taskForm">
           <input type="hidden" id="taskId" />
           <label>
@@ -56,69 +129,12 @@
             </label>
           </div>
           <div class="form-actions">
-            <button type="submit" class="primary">Save task</button>
+            <button type="submit" class="primary" id="submitTaskBtn">Save task</button>
             <button type="button" id="resetBtn" class="ghost">Reset</button>
           </div>
         </form>
-
-        <div class="message-card" id="motivation"></div>
-        <div class="progress-card">
-          <div class="progress-heading">
-            <div>
-              <p class="label">Daily progress</p>
-              <p class="muted">Goal: <span id="dailyGoal">5</span> tasks</p>
-            </div>
-            <p class="value" id="dailyProgress">0</p>
-          </div>
-          <div class="progress-bar">
-            <div class="progress" id="progressFill"></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel tasks-panel">
-        <div class="panel-heading">
-          <h2>Your quests</h2>
-          <div class="points-pill">
-            <span>Points</span>
-            <strong id="pointsValue">0</strong>
-          </div>
-        </div>
-
-        <div class="tasks-layout">
-          <div class="filters">
-            <select id="statusFilter">
-              <option value="all">All</option>
-              <option value="active">Active</option>
-              <option value="completed">Completed</option>
-            </select>
-            <select id="priorityFilter">
-              <option value="all">Any priority</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-              <option value="urgent">Urgent</option>
-            </select>
-            <input type="text" id="categoryFilter" placeholder="Category" />
-            <input type="search" id="searchInput" placeholder="Search tasks" />
-            <select id="sortSelect">
-              <option value="due-asc" selected>Due soon</option>
-              <option value="created-desc">Newest</option>
-              <option value="created-asc">Oldest</option>
-              <option value="priority-desc">Priority (high first)</option>
-              <option value="title-asc">Title A-Z</option>
-            </select>
-          </div>
-
-          <div id="taskGrid" class="task-grid" role="list" aria-live="polite"></div>
-        </div>
-      </section>
-
-      <section class="panel achievements-panel">
-        <h2>Achievements</h2>
-        <ul id="achievementList" class="achievement-list"></ul>
-      </section>
-    </main>
+      </div>
+    </div>
 
     <footer class="app-footer">
       <p>Fun Tasks keeps everything in your browser using local storage. Your data stays on this device.</p>
