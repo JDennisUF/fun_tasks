@@ -530,16 +530,18 @@ function createCalendarDay({ date, key, counts, isToday = false }) {
     }
   }
 
-  const addButton = document.createElement('button');
-  addButton.type = 'button';
-  addButton.className = 'calendar-add';
-  addButton.textContent = '+';
-  addButton.setAttribute('aria-label', `Add task for ${friendlyLabel}`);
-  addButton.addEventListener('click', (event) => {
-    event.stopPropagation();
-    startTaskFromCalendar(key);
-  });
-  dayEl.appendChild(addButton);
+  if (!isDateBeforeToday(key)) {
+    const addButton = document.createElement('button');
+    addButton.type = 'button';
+    addButton.className = 'calendar-add';
+    addButton.textContent = '+';
+    addButton.setAttribute('aria-label', `Add task for ${friendlyLabel}`);
+    addButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      startTaskFromCalendar(key);
+    });
+    dayEl.appendChild(addButton);
+  }
 
   dayEl.addEventListener('click', (event) => {
     if (event.target.closest('button')) return;
