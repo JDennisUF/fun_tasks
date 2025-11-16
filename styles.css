@@ -592,9 +592,9 @@ button.delete {
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(110px, 1fr));
   gap: 0.75rem;
-  grid-auto-rows: minmax(140px, auto);
+  grid-auto-rows: minmax(70px, auto);
 }
 
 .calendar-weekday {
@@ -608,8 +608,8 @@ button.delete {
 .calendar-day {
   border: 1px solid var(--border);
   border-radius: 1rem;
-  padding: 0.75rem;
-  min-height: 140px;
+  padding: 0.65rem;
+  min-height: 70px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -618,6 +618,12 @@ button.delete {
   position: relative;
   cursor: pointer;
   box-shadow: 0 5px 15px rgba(15, 23, 42, 0.04);
+}
+
+.calendar-day.is-today {
+  background: #fffbea;
+  border-color: #facc15;
+  box-shadow: 0 8px 18px rgba(250, 204, 21, 0.25);
 }
 
 .calendar-day:focus-within,
