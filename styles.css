@@ -312,6 +312,7 @@ button.ghost {
   border-radius: 999px;
   border: 1px solid var(--border);
   font-family: inherit;
+  font-size: 1.05rem;
   background: #f8fafc;
 }
 
