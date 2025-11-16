@@ -247,46 +247,59 @@ function renderTasks() {
   elements.taskGrid.innerHTML = '';
 
   if (!tasks.length) {
-    const row = document.createElement('div');
-    row.className = 'task-row';
-    const empty = document.createElement('article');
-    empty.className = 'task-card';
+    const empty = document.createElement('div');
+    empty.className = 'task-row';
     empty.setAttribute('role', 'listitem');
     empty.innerHTML = '<p>No tasks match your filters yet. Add something fun! ✨</p>';
-    row.appendChild(empty);
-    elements.taskGrid.appendChild(row);
+    elements.taskGrid.appendChild(empty);
     return;
   }
 
-  for (let index = 0; index < tasks.length; index += 3) {
-    const row = document.createElement('div');
-    row.className = 'task-row';
-    tasks.slice(index, index + 3).forEach((task) => {
-      row.appendChild(createTaskCard(task));
-    });
-    elements.taskGrid.appendChild(row);
-  }
+  elements.taskGrid.appendChild(createTaskHeader());
+  tasks.forEach((task) => {
+    elements.taskGrid.appendChild(createTaskRow(task));
+  });
 }
 
-function createTaskCard(task) {
+function createTaskHeader() {
+  const header = document.createElement('div');
+  header.className = 'task-row task-row--header';
+  header.setAttribute('aria-hidden', 'true');
+  header.innerHTML = `
+    <span>Task</span>
+    <span>Timeline</span>
+    <span>Category</span>
+    <span>Actions</span>
+  `;
+  return header;
+}
+
+function createTaskRow(task) {
   const card = document.createElement('article');
-  card.className = `task-card ${task.completed ? 'completed' : ''}`;
+  card.className = `task-row ${task.completed ? 'completed' : ''}`;
   card.setAttribute('role', 'listitem');
   const dueText = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date';
   const createdText = new Date(task.createdAt).toLocaleDateString();
-  const descriptionBlock = task.description ? `<p>${task.description}</p>` : '';
+  const descriptionBlock = task.description ? `<p class="task-description">${task.description}</p>` : '';
+  const categoryBlock = task.category ? `#${task.category}` : '<span class="muted">Uncategorized</span>';
+  const timelineLabel = task.dueDate ? `Due ${dueText}` : 'No due date';
 
   card.innerHTML = `
-    <header>
-      <h3>${task.title}</h3>
-      <span class="priority-pill priority-${task.priority}">${task.priority}</span>
-    </header>
-    ${descriptionBlock}
-    <div class="task-meta">
-      <span>Created ${createdText}</span>
-      <span>Due ${dueText}</span>
-      ${task.category ? `<span>#${task.category}</span>` : ''}
+    <div class="task-main">
+      <div class="task-title-line">
+        <h3>${task.title}</h3>
+        <span class="priority-pill priority-${task.priority}">${task.priority}</span>
+      </div>
+      ${descriptionBlock}
+      <div class="task-meta">
+        <span>Created ${createdText}</span>
+      </div>
     </div>
+    <div class="task-timeline">
+      <strong>${timelineLabel}</strong>
+      ${task.dueDate ? `<span class="muted">${dueText}</span>` : '<span class="muted">Set a due date</span>'}
+    </div>
+    <div class="task-category">${categoryBlock}</div>
     <div class="task-actions">
       <button class="complete" data-action="toggle">${task.completed ? 'Mark active' : 'Mark complete'}</button>
       <button class="edit" data-action="edit">Edit</button>
