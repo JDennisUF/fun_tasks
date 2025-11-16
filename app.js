@@ -556,6 +556,9 @@ function createCalendarDay({ date, key, counts, isToday = false }) {
 }
 
 function startTaskFromCalendar(dateKey) {
+  if (isDateBeforeToday(dateKey)) {
+    return;
+  }
   resetForm();
   elements.dueDate.value = dateKey;
   openTaskModal();
@@ -584,6 +587,24 @@ function formatDateKey(date) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
+}
+
+function parseDateKey(dateKey) {
+  if (typeof dateKey !== 'string') return null;
+  const [year, month, day] = dateKey.split('-').map(Number);
+  if ([year, month, day].some((value) => Number.isNaN(value))) {
+    return null;
+  }
+  return new Date(year, month - 1, day);
+}
+
+function isDateBeforeToday(dateKey) {
+  const date = parseDateKey(dateKey);
+  if (!date) return false;
+  const today = new Date();
+  date.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+  return date < today;
 }
 
 function getDueDateSortValue(task) {
