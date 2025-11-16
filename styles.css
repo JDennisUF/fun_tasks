@@ -648,6 +648,12 @@ button.delete {
   padding: 0.15rem 0.5rem;
 }
 
+.calendar-pill--completed {
+  background: rgba(16, 185, 129, 0.15);
+  color: #047857;
+  font-weight: 700;
+}
+
 .calendar-add {
   align-self: flex-start;
   padding: 0.35rem 0.85rem;
@@ -659,6 +665,15 @@ button.delete {
 
 .calendar-add:hover {
   background: rgba(139, 92, 246, 0.2);
+}
+
+.calendar-day.has-completed {
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
+}
+
+.calendar-day.has-completed .calendar-date {
+  color: #047857;
 }
 
 .calendar-panel .label {
