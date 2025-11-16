@@ -6,7 +6,12 @@ const motivationalMessages = {
     "Every task completed is a step forward!",
     "Small wins fuel big dreams. Keep moving!",
     "Momentum is building – stay in flow!",
-    "Future you is already grateful for this effort."
+    "Future you is already grateful for this effort.",
+    "You're stacking victories one checkbox at a time.",
+    "Today is the perfect day to surprise yourself.",
+    "Focus on progress, not perfection—you're moving!",
+    "The effort you invest right now multiplies tomorrow.",
+    "Your consistency is quietly rewriting your story."
   ],
   creation: [
     "Great idea! Let's make it happen.",
