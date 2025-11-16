@@ -504,7 +504,7 @@ function createCalendarDay({ date, key, counts, isToday = false }) {
   pills.className = 'calendar-pills';
   const priorityOrder = ['urgent', 'high', 'medium', 'low'];
   priorityOrder.forEach((priority) => {
-    const count = counts?.[priority] || 0;
+    const count = counts?.priorities?.[priority] || 0;
     if (!count) return;
     const pill = document.createElement('span');
     pill.className = `priority-pill calendar-pill priority-${priority}`;
@@ -515,6 +515,18 @@ function createCalendarDay({ date, key, counts, isToday = false }) {
   });
   if (pills.children.length) {
     dayEl.appendChild(pills);
+  }
+
+  if (counts?.completed) {
+    dayEl.classList.add('has-completed');
+    const completedPill = document.createElement('span');
+    completedPill.className = 'calendar-pill calendar-pill--completed';
+    completedPill.textContent = counts.completed;
+    completedPill.setAttribute('aria-label', `${counts.completed} completed task${counts.completed === 1 ? '' : 's'}`);
+    pills.appendChild(completedPill);
+    if (!pills.isConnected) {
+      dayEl.appendChild(pills);
+    }
   }
 
   const addButton = document.createElement('button');
@@ -553,9 +565,16 @@ function getTaskCountsByDate() {
   return state.tasks.reduce((acc, task) => {
     if (!task.dueDate) return acc;
     if (!acc[task.dueDate]) {
-      acc[task.dueDate] = { low: 0, medium: 0, high: 0, urgent: 0 };
+      acc[task.dueDate] = {
+        priorities: { low: 0, medium: 0, high: 0, urgent: 0 },
+        completed: 0
+      };
     }
-    acc[task.dueDate][task.priority] += 1;
+    if (task.completed) {
+      acc[task.dueDate].completed += 1;
+    } else {
+      acc[task.dueDate].priorities[task.priority] += 1;
+    }
     return acc;
   }, {});
 }
