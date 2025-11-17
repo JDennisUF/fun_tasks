@@ -354,7 +354,6 @@ function createTaskRow(task) {
           <h3>${task.title}</h3>
           <p class="task-category-inline">${categoryBlock}</p>
         </div>
-        <span class="priority-pill priority-${task.priority}">${task.priority}</span>
       </div>
       ${descriptionBlock}
       <div class="task-meta">
@@ -364,6 +363,7 @@ function createTaskRow(task) {
     <div class="task-timeline">
       <strong>${timelineLabel}</strong>
       ${task.dueDate ? '' : '<span class="muted">Set a due date</span>'}
+      <span class="priority-pill priority-${task.priority}">${task.priority}</span>
     </div>
     <div class="task-actions">
       <button class="complete" data-action="toggle">${task.completed ? 'Mark active' : 'Mark complete'}</button>
